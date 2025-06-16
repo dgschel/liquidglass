@@ -25,6 +25,9 @@ export class AppComponent {
   private x = signal(0);
   private y = signal(0);
 
+  // Border size in pixels (0.5rem)
+  private readonly borderSize = 0.5 * 16;
+
   // Size of the element to keep visible
   private readonly elementWidth = 200;
   private readonly elementHeight = 200;
@@ -51,10 +54,12 @@ export class AppComponent {
         const glass = this.glassRect();
 
         // Calculate max x and y so the element stays fully visible
-        const maxX = glass.left + glass.width - this.elementWidth;
-        const minX = glass.left;
-        const maxY = glass.top + glass.height - this.elementHeight;
-        const minY = glass.top;
+        const maxX =
+          glass.left + glass.width - this.elementWidth - this.borderSize;
+        const minX = glass.left - this.borderSize;
+        const maxY =
+          glass.top + glass.height - this.elementHeight - this.borderSize;
+        const minY = glass.top + this.borderSize;
 
         // Generate random x and y within bounds
         const randomX = Math.random() * (maxX - minX) + minX;
