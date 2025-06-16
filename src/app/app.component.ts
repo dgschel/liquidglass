@@ -38,19 +38,24 @@ export class AppComponent {
   private containerRef =
     viewChild.required<ElementRef<HTMLDivElement>>('container');
 
+  // Compute only once the bounding rectangle of the container
+  private glassRect = computed(() =>
+    this.containerRef().nativeElement.getBoundingClientRect()
+  );
+
   constructor() {
     effect(() => {
       // Get the container's bounding rectangle
-      const rect = this.containerRef().nativeElement.getBoundingClientRect();
+      const glass = this.glassRect();
 
       // Initialize the x and y signals to the center based on the container's position
-      this.x.set(rect.left + (rect.width - this.elementWidth) / 2);
-      this.y.set(rect.top + (rect.height - this.elementHeight) / 2);
+      this.x.set(glass.left + (glass.width - this.elementWidth) / 2);
+      this.y.set(glass.top + (glass.height - this.elementHeight) / 2);
     });
 
     // Update the position of the element every 5000ms with random values within the container
     interval(5000).subscribe(() => {
-      const glass = this.containerRef().nativeElement.getBoundingClientRect();
+      const glass = this.glassRect();
 
       // Calculate max x and y so the element stays fully visible
       const maxX = glass.left + glass.width - this.elementWidth;
