@@ -34,7 +34,7 @@ export class AppComponent {
     y: this.y(),
   }));
 
-  // Use viewChild to get a reference to the container element which we will use to calculate the position of the element
+  // Use viewChild to get a reference to the container element
   private containerRef =
     viewChild.required<ElementRef<HTMLDivElement>>('container');
 
@@ -44,14 +44,27 @@ export class AppComponent {
       const rect = this.containerRef().nativeElement.getBoundingClientRect();
 
       // Initialize the x and y signals to the center based on the container's position
-      this.x.set(rect.left + rect.width / 2 - 100);
-      this.y.set(rect.top + rect.height / 2 - 100);
+      this.x.set(rect.left + (rect.width - this.elementWidth) / 2);
+      this.y.set(rect.top + (rect.height - this.elementHeight) / 2);
     });
 
-    // Update the position of the element every 5000ms
+    // Update the position of the element every 5000ms with random values within the container
     interval(5000).subscribe(() => {
-      this.x.update((x) => x + 100);
-      this.y.update((y) => y + 50);
+      const glass = this.containerRef().nativeElement.getBoundingClientRect();
+
+      // Calculate max x and y so the element stays fully visible
+      const maxX = glass.left + glass.width - this.elementWidth;
+      const minX = glass.left;
+      const maxY = glass.top + glass.height - this.elementHeight;
+      const minY = glass.top;
+
+      // Generate random x and y within bounds
+      const randomX = Math.random() * (maxX - minX) + minX;
+      const randomY = Math.random() * (maxY - minY) + minY;
+
+      // Update the x and y signals with the new random values
+      this.x.set(randomX);
+      this.y.set(randomY);
     });
   }
 }
