@@ -7,7 +7,8 @@ import {
   effect,
 } from '@angular/core';
 import { signal, computed } from '@angular/core';
-import { interval } from 'rxjs';
+import { interval, tap } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
@@ -43,6 +44,29 @@ export class AppComponent {
     this.containerRef().nativeElement.getBoundingClientRect()
   );
 
+  // Create an interval signal from an Observable that updates the position every 5000ms
+  interval = toSignal(
+    interval(5000).pipe(
+      tap(() => {
+        const glass = this.glassRect();
+
+        // Calculate max x and y so the element stays fully visible
+        const maxX = glass.left + glass.width - this.elementWidth;
+        const minX = glass.left;
+        const maxY = glass.top + glass.height - this.elementHeight;
+        const minY = glass.top;
+
+        // Generate random x and y within bounds
+        const randomX = Math.random() * (maxX - minX) + minX;
+        const randomY = Math.random() * (maxY - minY) + minY;
+
+        // Update the x and y signals with the new random values
+        this.x.set(randomX);
+        this.y.set(randomY);
+      })
+    )
+  );
+
   constructor() {
     effect(() => {
       // Get the container's bounding rectangle
@@ -51,25 +75,6 @@ export class AppComponent {
       // Initialize the x and y signals to the center based on the container's position
       this.x.set(glass.left + (glass.width - this.elementWidth) / 2);
       this.y.set(glass.top + (glass.height - this.elementHeight) / 2);
-    });
-
-    // Update the position of the element every 5000ms with random values within the container
-    interval(5000).subscribe(() => {
-      const glass = this.glassRect();
-
-      // Calculate max x and y so the element stays fully visible
-      const maxX = glass.left + glass.width - this.elementWidth;
-      const minX = glass.left;
-      const maxY = glass.top + glass.height - this.elementHeight;
-      const minY = glass.top;
-
-      // Generate random x and y within bounds
-      const randomX = Math.random() * (maxX - minX) + minX;
-      const randomY = Math.random() * (maxY - minY) + minY;
-
-      // Update the x and y signals with the new random values
-      this.x.set(randomX);
-      this.y.set(randomY);
     });
   }
 }
