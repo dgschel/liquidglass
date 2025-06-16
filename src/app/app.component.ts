@@ -24,6 +24,10 @@ export class AppComponent {
   private x = signal(0);
   private y = signal(0);
 
+  // Size of the element to keep visible
+  private readonly elementWidth = 200;
+  private readonly elementHeight = 200;
+
   // Computed property to get the position of the element
   protected position = computed(() => ({
     x: this.x(),
