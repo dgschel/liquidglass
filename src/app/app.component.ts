@@ -8,7 +8,7 @@ import {
   computed,
 } from '@angular/core';
 
-import { animate, utils } from 'animejs';
+import { animate, createTimeline, utils } from 'animejs';
 
 @Component({
   selector: 'app-root',
@@ -61,6 +61,51 @@ export class AppComponent {
     };
 
     effect(() => {
+      const opacityIn = [0, 1];
+      const scaleIn = [0.2, 1];
+      const scaleOut = 3;
+      const durationIn = 800;
+      const durationOut = 600;
+      const delay = 500;
+
+      createTimeline()
+        .add('.letter-3', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-3', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        })
+        .add('.letter-2', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-2', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        })
+        .add('.letter-1', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-1', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        });
+
       // Animate the glass element to a new random position every random seconds with a random duration and a random delay
       const animateToRandomPosition = () => {
         const { x, y } = this.getRandomConstrainedPosition();
