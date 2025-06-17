@@ -23,38 +23,38 @@ export class AppComponent {
   // Border size in pixels (0.5rem)
   private readonly borderSize = 0.5 * 16;
 
+  private glassRef = viewChild.required<ElementRef<HTMLDivElement>>('glass');
   private containerRef =
     viewChild.required<ElementRef<HTMLDivElement>>('container');
 
-  // Compute only once the bounding rectangle of the container
-  private glassRect = computed(() =>
-    this.containerRef().nativeElement.getBoundingClientRect()
-  );
+  getRandomConstrainedPosition = () => {
+    // Get the container's bounding rectangle
+    const containerRect =
+      this.containerRef().nativeElement.getBoundingClientRect();
 
-  // Create an interval signal from an Observable that updates the position every 5000ms
-  interval = toSignal(
-    interval(5000).pipe(
-      tap(() => {
-        const glass = this.glassRect();
+    // Get the glass element's bounding rectangle
+    const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
 
-        // Calculate max x and y so the element stays fully visible
+    // Calculate the maximum x and y positions to keep the glass element fully visible
         const maxX =
-          glass.left + glass.width - this.elementWidth - this.borderSize;
-        const minX = glass.left - this.borderSize;
+      containerRect.left +
+      containerRect.width -
+      glassRect.width -
+      this.borderSize;
+    const minX = containerRect.left + this.borderSize;
         const maxY =
-          glass.top + glass.height - this.elementHeight - this.borderSize;
-        const minY = glass.top + this.borderSize;
+      containerRect.top +
+      containerRect.height -
+      glassRect.height -
+      this.borderSize;
+    const minY = containerRect.top + this.borderSize;
 
-        // Generate random x and y within bounds
-        const randomX = Math.random() * (maxX - minX) + minX;
-        const randomY = Math.random() * (maxY - minY) + minY;
-
-        // Update the x and y signals with the new random values
-        this.x.set(randomX);
-        this.y.set(randomY);
-      })
-    )
-  );
+    // Return the computed position ensuring it stays within the container bounds
+    return {
+      x: utils.random(minX, maxX),
+      y: utils.random(minY, maxY),
+    };
+  };
 
   constructor() {
     effect(() => {
