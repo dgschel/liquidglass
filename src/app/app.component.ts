@@ -86,7 +86,8 @@ export class AppComponent {
 
       // Wait 3 seconds before starting the animation loop
       setTimeout(() => {
-      animateToRandomPosition();
+        animateToRandomPosition();
+      }, 3000);
     });
   }
 }
