@@ -1,4 +1,3 @@
-import { NgStyle } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -36,13 +35,13 @@ export class AppComponent {
     const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
 
     // Calculate the maximum x and y positions to keep the glass element fully visible
-        const maxX =
+    const maxX =
       containerRect.left +
       containerRect.width -
       glassRect.width -
       this.borderSize;
     const minX = containerRect.left + this.borderSize;
-        const maxY =
+    const maxY =
       containerRect.top +
       containerRect.height -
       glassRect.height -
@@ -58,12 +57,28 @@ export class AppComponent {
 
   constructor() {
     effect(() => {
-      // Get the container's bounding rectangle
-      const glass = this.glassRect();
+      // Animate the glass element to a new random position every random seconds with a random duration and a random delay
+      const animateToRandomPosition = () => {
+        const { x, y } = this.getRandomConstrainedPosition();
+        const randomDuration = utils.random(2000, 5000);
+        const randomDelay = utils.random(0, 3000);
 
-      // Initialize the x and y signals to the center based on the container's position
-      this.x.set(glass.left + (glass.width - this.elementWidth) / 2);
-      this.y.set(glass.top + (glass.height - this.elementHeight) / 2);
+        // Use animejs to animate the glass element to the new position
+        animate(this.glassRef().nativeElement, {
+          translateX: x,
+          translateY: y,
+          duration: randomDuration,
+          delay: randomDelay,
+          easing: 'easeInOutQuad',
+          onComplete: () => {
+            // After the animation completes, call the function again to animate to a new position
+            animateToRandomPosition();
+          },
+        });
+      };
+
+      // Start the animation loop
+      animateToRandomPosition();
     });
   }
 }
