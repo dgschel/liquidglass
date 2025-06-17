@@ -35,17 +35,9 @@ export class AppComponent {
     const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
 
     // Calculate the maximum x and y positions to keep the glass element fully visible
-    const maxX =
-      containerRect.left +
-      containerRect.width -
-      glassRect.width -
-      this.borderSize;
+    const maxX = containerRect.width - glassRect.width - this.borderSize;
     const minX = containerRect.left + this.borderSize;
-    const maxY =
-      containerRect.top +
-      containerRect.height -
-      glassRect.height -
-      this.borderSize;
+    const maxY = containerRect.height - glassRect.height - this.borderSize;
     const minY = containerRect.top + this.borderSize;
 
     // Return the computed position ensuring it stays within the container bounds
