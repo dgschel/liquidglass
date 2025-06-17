@@ -35,10 +35,10 @@ export class AppComponent {
     const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
 
     // Calculate the maximum x and y positions to keep the glass element fully visible
-    const maxX = containerRect.width - glassRect.width - this.borderSize;
-    const minX = containerRect.left + this.borderSize;
-    const maxY = containerRect.height - glassRect.height - this.borderSize;
-    const minY = containerRect.top + this.borderSize;
+    const maxX = containerRect.width - glassRect.width - this.borderSize * 2;
+    const minX = containerRect.left + this.borderSize * 2;
+    const maxY = containerRect.height - glassRect.height - this.borderSize * 2;
+    const minY = containerRect.top + this.borderSize * 2;
 
     // Return the computed position ensuring it stays within the container bounds
     return {
@@ -74,8 +74,10 @@ export class AppComponent {
       const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
 
       // Calculate center position
-      const centerX = (containerRect.width - glassRect.width) / 2;
-      const centerY = (containerRect.height - glassRect.height) / 2;
+      const centerX =
+        (containerRect.width - glassRect.width - this.borderSize * 2) / 2;
+      const centerY =
+        (containerRect.height - glassRect.height - this.borderSize * 2) / 2;
 
       // Set initial position to center
       animate(this.glassRef().nativeElement, {
