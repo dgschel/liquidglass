@@ -4,6 +4,8 @@ import {
   ChangeDetectionStrategy,
   viewChild,
   effect,
+  signal,
+  computed,
 } from '@angular/core';
 
 import { animate, utils } from 'animejs';
@@ -47,7 +49,17 @@ export class AppComponent {
     };
   };
 
+  private _imageLoaded = signal(false); // Signal for tracking image load state
+  protected imageLoaded = computed(() => this._imageLoaded());
+
   constructor() {
+    const image = new Image();
+    image.src = 'bg.jpeg';
+
+    image.onload = () => {
+      this._imageLoaded.set(true); // Set the signal to true when the image is loaded
+    };
+
     effect(() => {
       // Animate the glass element to a new random position every random seconds with a random duration and a random delay
       const animateToRandomPosition = () => {
