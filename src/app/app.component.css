@@ -13,9 +13,8 @@
 }
 
 .liquid-glass {
-  position: absolute;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   backdrop-filter: blur(3px);
   background-color: rgba(255, 255, 255, 0.2);
@@ -23,5 +22,4 @@
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
     inset 0 4px 8px rgba(255, 255, 255, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  transition: all 0.7s ease-in-out;
 }
