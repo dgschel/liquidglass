@@ -6,13 +6,12 @@ import {
   viewChild,
   effect,
 } from '@angular/core';
-import { signal, computed } from '@angular/core';
-import { interval, tap } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+
+import { animate, utils } from 'animejs';
 
 @Component({
   selector: 'app-root',
-  imports: [NgStyle],
+  imports: [],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone: true,
