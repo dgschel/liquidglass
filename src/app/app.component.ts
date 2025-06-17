@@ -49,9 +49,6 @@ export class AppComponent {
     };
   };
 
-  private _imageLoaded = signal(false); // Signal for tracking image load state
-  protected imageLoaded = computed(() => this._imageLoaded());
-
   constructor() {
     // Animation configuration
     const opacityIn = [0, 1];
@@ -65,7 +62,10 @@ export class AppComponent {
     image.src = 'bg.jpeg';
 
     image.onload = () => {
-      this._imageLoaded.set(true); // Set the signal to true when the image is loaded
+      // Set the background image of the container when the image is loaded
+      this.containerRef().nativeElement.style.backgroundImage = `url(${image.src})`;
+      this.containerRef().nativeElement.style.backgroundSize = 'cover';
+      this.containerRef().nativeElement.style.backgroundPosition = 'center';
 
       // Use the callback to start the actual animation of the glass element
       createTimeline({
