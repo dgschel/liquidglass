@@ -69,7 +69,23 @@ export class AppComponent {
         });
       };
 
-      // Start the animation loop
+      const containerRect =
+        this.containerRef().nativeElement.getBoundingClientRect();
+      const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
+
+      // Calculate center position
+      const centerX = (containerRect.width - glassRect.width) / 2;
+      const centerY = (containerRect.height - glassRect.height) / 2;
+
+      // Set initial position to center
+      animate(this.glassRef().nativeElement, {
+        translateX: centerX,
+        translateY: centerY,
+        duration: 0,
+      });
+
+      // Wait 3 seconds before starting the animation loop
+      setTimeout(() => {
       animateToRandomPosition();
     });
   }
