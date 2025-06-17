@@ -53,79 +53,93 @@ export class AppComponent {
   protected imageLoaded = computed(() => this._imageLoaded());
 
   constructor() {
+    // Animation configuration
+    const opacityIn = [0, 1];
+    const scaleIn = [0.2, 1];
+    const scaleOut = 3;
+    const durationIn = 800;
+    const durationOut = 600;
+    const delay = 500;
+
     const image = new Image();
     image.src = 'bg.jpeg';
 
     image.onload = () => {
       this._imageLoaded.set(true); // Set the signal to true when the image is loaded
+
+      // Use the callback to start the actual animation of the glass element
+      createTimeline({
+        onComplete: () => {
+          // Animate the glass element to a new random position every random seconds with a random duration and a random delay
+          const animateToRandomPosition = () => {
+            const { x, y } = this.getRandomConstrainedPosition();
+            const randomDuration = utils.random(2000, 5000);
+            const randomDelay = utils.random(0, 3000);
+
+            // Use animejs to animate the glass element to the new position
+            animate(this.glassRef().nativeElement, {
+              translateX: x,
+              translateY: y,
+              duration: randomDuration,
+              delay: randomDelay,
+              easing: 'easeInOutQuad',
+              onComplete: () => {
+                // After the animation completes, call the function again to animate to a new position
+                animateToRandomPosition();
+              },
+            });
+          };
+
+          // Start the animation to random positions
+          animateToRandomPosition();
+        },
+      })
+        .add('.letter-3', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-3', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        })
+        .add('.letter-2', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-2', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        })
+        .add('.letter-1', {
+          opacity: opacityIn,
+          scale: scaleIn,
+          duration: durationIn,
+        })
+        .add('.letter-1', {
+          opacity: 0,
+          scale: scaleOut,
+          duration: durationOut,
+          ease: 'easeInExpo',
+          delay: delay,
+        })
+        .add(this.glassRef().nativeElement, {
+          opacity: [0, 1],
+          scale: [0.8, 1],
+          duration: 1000,
+          easing: 'easeOutExpo',
+        });
     };
 
     effect(() => {
-      const opacityIn = [0, 1];
-      const scaleIn = [0.2, 1];
-      const scaleOut = 3;
-      const durationIn = 800;
-      const durationOut = 600;
-      const delay = 500;
-
-      createTimeline()
-        .add('.letter-3', {
-          opacity: opacityIn,
-          scale: scaleIn,
-          duration: durationIn,
-        })
-        .add('.letter-3', {
-          opacity: 0,
-          scale: scaleOut,
-          duration: durationOut,
-          ease: 'easeInExpo',
-          delay: delay,
-        })
-        .add('.letter-2', {
-          opacity: opacityIn,
-          scale: scaleIn,
-          duration: durationIn,
-        })
-        .add('.letter-2', {
-          opacity: 0,
-          scale: scaleOut,
-          duration: durationOut,
-          ease: 'easeInExpo',
-          delay: delay,
-        })
-        .add('.letter-1', {
-          opacity: opacityIn,
-          scale: scaleIn,
-          duration: durationIn,
-        })
-        .add('.letter-1', {
-          opacity: 0,
-          scale: scaleOut,
-          duration: durationOut,
-          ease: 'easeInExpo',
-          delay: delay,
-        });
-
-      // Animate the glass element to a new random position every random seconds with a random duration and a random delay
-      const animateToRandomPosition = () => {
-        const { x, y } = this.getRandomConstrainedPosition();
-        const randomDuration = utils.random(2000, 5000);
-        const randomDelay = utils.random(0, 3000);
-
-        // Use animejs to animate the glass element to the new position
-        animate(this.glassRef().nativeElement, {
-          translateX: x,
-          translateY: y,
-          duration: randomDuration,
-          delay: randomDelay,
-          easing: 'easeInOutQuad',
-          onComplete: () => {
-            // After the animation completes, call the function again to animate to a new position
-            animateToRandomPosition();
-          },
-        });
-      };
-
+      // Use effect to access safely the viewChild signal properties
       const containerRect =
         this.containerRef().nativeElement.getBoundingClientRect();
       const glassRect = this.glassRef().nativeElement.getBoundingClientRect();
@@ -142,11 +156,6 @@ export class AppComponent {
         translateY: centerY,
         duration: 0,
       });
-
-      // Wait 3 seconds before starting the animation loop
-      setTimeout(() => {
-        animateToRandomPosition();
-      }, 3000);
     });
   }
 }
