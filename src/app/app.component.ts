@@ -20,24 +20,9 @@ import { animate, utils } from 'animejs';
 export class AppComponent {
   title = 'liquidglass';
 
-  // initialize x and y as signals
-  private x = signal(0);
-  private y = signal(0);
-
   // Border size in pixels (0.5rem)
   private readonly borderSize = 0.5 * 16;
 
-  // Size of the element to keep visible
-  private readonly elementWidth = 200;
-  private readonly elementHeight = 200;
-
-  // Computed property to get the position of the element
-  protected position = computed(() => ({
-    x: this.x(),
-    y: this.y(),
-  }));
-
-  // Use viewChild to get a reference to the container element
   private containerRef =
     viewChild.required<ElementRef<HTMLDivElement>>('container');
 
