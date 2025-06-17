@@ -70,13 +70,25 @@ export class AppComponent {
       // Use the callback to start the actual animation of the glass element
       createTimeline({
         onComplete: () => {
+          // Play the calming background sound on loop when the glass animation is about to start
+          const soundCalm = new Audio('calm.mp3');
+          soundCalm.loop = true;
+          soundCalm.volume = 0.5; // Set the volume to a comfortable level
+          soundCalm.play();
+
+          // Create a sound for the meditation bell
+          const soundBell = new Audio('meditation-bell.mp3');
+          soundBell.volume = 0.5;
+
+          // Track the number of moves
+          let moveCount = 0;
+
           // Animate the glass element to a new random position every random seconds with a random duration and a random delay
           const animateToRandomPosition = () => {
             const { x, y } = this.getRandomConstrainedPosition();
             const randomDuration = utils.random(2000, 5000);
             const randomDelay = utils.random(0, 3000);
 
-            // Use animejs to animate the glass element to the new position
             animate(this.glassRef().nativeElement, {
               translateX: x,
               translateY: y,
@@ -84,7 +96,8 @@ export class AppComponent {
               delay: randomDelay,
               easing: 'easeInOutQuad',
               onComplete: () => {
-                // After the animation completes, call the function again to animate to a new position
+                // Play the bell sound every 3 moves
+                if (moveCount++ % 3 === 0) soundBell.play();
                 animateToRandomPosition();
               },
             });
